@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Shop</title>
+</head>
+<body>
+    <h1>Medicine Shop</h1>
+    
+    <!-- Search Form -->
+    <form action="{{ url_for('search') }}" method="POST">
+        <label for="search_term">Search Medicine:</label>
+        <input type="text" id="search_term" name="search_term" placeholder="Enter medicine name">
+        <button type="submit">Search</button>
+    </form>
+
+    <ul>
+        {% for medicine in medicines %}
+            <li>
+                {{ medicine[1] }} - Quantity: {{ medicine[4] }} - Price: ${{ medicine[3] }}
+                <form action="{{ url_for('add_to_cart', medicine_id=medicine[0]) }}" method="GET">
+                    <button type="submit">Add to Cart</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('view_cart') }}">View Cart</a>
+</body>
+</html>

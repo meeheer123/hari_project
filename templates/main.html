@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home page</title>
+    <style>
+      body {
+        background: -webkit-linear-gradient(to top, #a8e063, #56ab2f);
+        background: linear-gradient(to top, #a8e063, #56ab2f);
+        background-repeat: no-repeat;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .container {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        /* justify-content: center; */
+        width: 800px;
+        border: 2px solid green;
+        border-radius: 10px;
+        padding: 12px 25px;
+        height: 550px;
+      }
+      h1 {
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+        color: white;
+      }
+      a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: green;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 1s ease;
+}
+
+/* Hover effect */
+a:hover {
+    background-color: #0056b3;
+}
+      ul {
+        display: flex;
+        gap: 1rem;
+      }
+      li {
+        list-style: none;
+      }
+      img {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        margin: auto 1px;
+      }
+      p {
+        color: azure;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <nav>
+            <img src="./assets/logo.jpg" alt="" />
+            <ul>
+          <li><a href="order.html">Order Medicine</a></li>
+          <li><a href="{{ url_for('homepage') }}">Book Appointment</a></li>
+          <li><a href="emergency.html">Emergency Contact</a></li>
+        </ul>
+      </nav>
+      <div class="about">
+        <h1>About Us</h1>
+        <p>
+          MediFinder is a sophisticated solution that harnesses the power of
+          location-based technology to offer users instant access to critical
+          information about nearby drug stores. By integrating real-time data on
+          medication availability and pharmacy locations, this system provides a
+          valuable resource for individuals seeking specific medicines in their
+          vicinity. The platform's intuitive interface enables seamless
+          navigation and search functionalities, ensuring users can quickly
+          locate the nearest pharmacy stocking their required medications.
+          Moreover, MediFinder goes beyond merely displaying pharmacy locations.
+        </p>
+
+        <p>
+          It also serves as a comprehensive healthcare hub by facilitating
+          doctor appointments directly through the platform. Users can
+          conveniently schedule appointments with healthcare providers based on
+          their availability and proximity. This integrated feature enhances the
+          overall user experience, making MediFinder a one-stop solution for
+          both medication procurement and medical consultations.
+        </p>
+
+        <p>
+          In summary, MediFinder represents a transformative approach to
+          healthcare accessibility, offering a dynamic platform that combines
+          medication search capabilities with seamless appointment booking. Its
+          innovative features cater to the evolving needs of users, ensuring
+          timely access to vital healthcare resources and fostering a more
+          connected and informed healthcare ecosystem.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+</head>
+<body>
+    <h1>Your Cart</h1>
+    <ul>
+        {% for item in cart_items %}
+            <li>{{ item[1] }} - {{ item[3] }}</li>
+        {% endfor %}
+    </ul>
+    <form action="{{ url_for('checkout') }}" method="POST">
+        <button type="submit">Checkout</button>
+    </form>
+</body>
+</html>

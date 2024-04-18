@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Medicine</title>
+</head>
+<body>
+    <h1>Search Medicine</h1>
+    
+    <!-- Search Form -->
+    <form action="{{ url_for('search') }}" method="POST">
+        <label for="search_term">Search Medicine:</label>
+        <input type="text" id="search_term" name="search_term" placeholder="Enter medicine name">
+        <button type="submit">Search</button>
+        <div>
+            {% if message %}
+                <h3>Medicine Out Of Stock</h3>
+            {% endif %}
+            {% for i in medicines %}
+                <h3>{{ i[1] }}</h3>
+                <p>Quantity: {{ i[4] }}</p>
+                <p>Price: ${{ i[3] }}</p>
+                <form action="{{ url_for('add_to_cart', medicine_id=i[0]) }}" method="GET">
+                    <button type="submit">Add to Cart</button>
+                </form>
+            {% endfor %}
+        </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Appointments</title>
+</head>
+<body>
+    <h1>Your Appointments</h1>
+    <ul>
+        {% for appointment in appointments %}
+        <li>
+            Doctor: {{ appointment[1] }}<br>
+            Date: {{ appointment[5] }}<br>
+            Time: {{ appointment[6] }}<br>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

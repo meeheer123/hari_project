@@ -1,0 +1,39 @@
+.mainpage-desc {
+  padding: 20px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+.card {
+  margin-bottom: 20px;
+}
+.form-select:focus,
+.form-select:active {
+  outline: none;
+  box-shadow: none;
+}
+
+.card-img-top {
+  object-fit: cover;
+}
+
+.login-page {
+  margin-top: 170px;
+}
+.disabled {
+  color: rgb(134, 134, 134) !important;
+}
+.navbar-nav .nav-item .nav-link {
+  color: rgb(0, 0, 0);
+}
+.navbar-nav .nav-item.active .nav-link,
+.navbar-nav .nav-item:hover .nav-link {
+  color: rgb(134, 134, 134);
+}
+.piechart-main {
+  width: 80%;
+  margin: 15px auto;
+}
+.navbar-shadow {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  background: #f9f7f7;
+}
