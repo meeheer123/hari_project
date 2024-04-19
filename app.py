@@ -181,10 +181,14 @@ def user_signup():
 
 @app.route('/')
 def home():
-    if 'user_id' in session:
+    if 'user_id' not in session:
         return redirect(url_for('user_login'))
     else:
-        return redirect(url_for('homepage'))
+        return redirect(url_for('info'))
+    
+@app.route('/info')
+def info():
+    return render_template('main.html')
 
 @app.route('/homepage')
 def homepage():

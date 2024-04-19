@@ -23,7 +23,7 @@
                 <p>Price: ${{ i[3] }}</p>
                 <form action="{{ url_for('add_to_cart', medicine_id=i[0]) }}" method="GET">
                     <button type="submit">Add to Cart</button>
-                </form>
+                </form>     
             {% endfor %}
         </div>
     </form>
