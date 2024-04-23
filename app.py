@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import sqlite3
 
+
 def initialize_database():
     conn = sqlite3.connect('schema.db')
     cursor = conn.cursor()
@@ -28,17 +29,18 @@ def initialize_database():
     ''')
 
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS appointments (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            user_id INTEGER,
-            phone TEXT,
-            email TEXT,
-            date TEXT,
-            time TEXT,
-            doctor_id INTEGER
-        )
-    ''')
+    CREATE TABLE IF NOT EXISTS appointments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        doctor_id INTEGER,
+        name TEXT,
+        email TEXT,
+        phone TEXT,
+        date TEXT,
+        time TEXT,
+        booked INTEGER,
+        FOREIGN KEY (doctor_id) REFERENCES doctors(id)
+    )
+''')
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS doctors (
@@ -82,9 +84,11 @@ def initialize_database():
     cursor.close()
     conn.close()
 
+
 initialize_database()
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
+
 
 @app.route('/login/user', methods=['GET', 'POST'])
 def user_login():
@@ -110,6 +114,7 @@ def user_login():
     else:
         return render_template('login-user.html')
 
+
 @app.route('/shop')
 def shop():
     conn = sqlite3.connect('schema.db')
@@ -123,6 +128,7 @@ def shop():
 
     return render_template('shop.html', medicines=medicines)
 
+
 @app.route('/add_to_cart/<int:medicine_id>')
 def add_to_cart(medicine_id):
     if 'cart' not in session:
@@ -130,6 +136,7 @@ def add_to_cart(medicine_id):
 
     session['cart'].append(medicine_id)
     return redirect(url_for('shop'))
+
 
 @app.route('/cart')
 def view_cart():
@@ -148,10 +155,12 @@ def view_cart():
 
     return render_template('cart.html', cart_items=cart_items)
 
+
 @app.route('/checkout', methods=['POST'])
 def checkout():
     session.pop('cart', None)
     return "Checkout successful!"
+
 
 @app.route('/signup/user', methods=['POST', 'GET'])
 def user_signup():
@@ -179,16 +188,19 @@ def user_signup():
 
     return render_template('signup-user.html')
 
+
 @app.route('/')
 def home():
     if 'user_id' not in session:
         return redirect(url_for('user_login'))
     else:
         return redirect(url_for('info'))
-    
+
+
 @app.route('/info')
 def info():
     return render_template('main.html')
+
 
 @app.route('/homepage')
 def homepage():
@@ -203,6 +215,7 @@ def homepage():
 
     return render_template('userpage.html', doctors=doctors)
 
+
 @app.route('/view_profile/<int:doctor_id>')
 def view_profile(doctor_id):
     conn = sqlite3.connect('schema.db')
@@ -215,6 +228,7 @@ def view_profile(doctor_id):
     conn.close()
 
     return render_template('profile.html', doctor=doctor)
+
 
 @app.route('/user_appointments')
 def user_appointments():
@@ -232,6 +246,7 @@ def user_appointments():
 
     return render_template('user_appointments.html', appointments=appointments)
 
+
 @app.route('/book_appointment/<int:doctor_id>', methods=['GET', 'POST'])
 def book_appointment(doctor_id):
     if request.method == 'POST':
@@ -241,13 +256,24 @@ def book_appointment(doctor_id):
         date = request.form['date']
         time = request.form['time']
 
+        # Check if the selected timeslot is available
         conn = sqlite3.connect('schema.db')
         cursor = conn.cursor()
+        cursor.execute(
+            'SELECT * FROM appointments WHERE doctor_id = ? AND date = ? AND time = ? AND booked = 1', (doctor_id, date, time))
+        existing_appointment = cursor.fetchone()
 
+        if existing_appointment:
+            # Timeslot is already booked
+            cursor.close()
+            conn.close()
+            return 'Selected timeslot is not available. Please choose another time.'
+
+        # Book the appointment
         cursor.execute('''
-            INSERT INTO appointments (name, email, phone, doctor_id, date, time, user_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        ''', (name, email, phone, doctor_id, date, time, session['user_id']))
+            INSERT INTO appointments (doctor_id, name, email, phone, date, time, booked)
+            VALUES (?, ?, ?, ?, ?, ?, 1)
+        ''', (doctor_id, name, email, phone, date, time))
 
         conn.commit()
         cursor.close()
@@ -255,7 +281,9 @@ def book_appointment(doctor_id):
 
         return 'Appointment booked successfully!'
 
+    # If the request method is not POST, render the book_appointment.html template
     return render_template('book_appointment.html', doctor_id=doctor_id)
+
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
@@ -265,14 +293,17 @@ def search():
         conn = sqlite3.connect('schema.db')
         cursor = conn.cursor()
 
-        cursor.execute('SELECT * FROM medicines WHERE LOWER(name) LIKE ?', ('%' + search_term + '%',))
+        cursor.execute(
+            'SELECT * FROM medicines WHERE LOWER(name) LIKE ?', ('%' + search_term + '%',))
         medicines = cursor.fetchall()
 
         cursor.close()
         conn.close()
 
         if medicines:
-            in_stock_medicines = [medicine for medicine in medicines if medicine[4] > 0]  # Filter out medicines with quantity > 0
+            # Filter out medicines with quantity > 0
+            in_stock_medicines = [
+                medicine for medicine in medicines if medicine[4] > 0]
             if in_stock_medicines:
                 return render_template('search.html', medicines=in_stock_medicines)
             else:
@@ -281,6 +312,7 @@ def search():
             return render_template('search.html', message='No medicines found matching the search term.')
 
     return render_template('search.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
